@@ -11,30 +11,31 @@ $(document).ready(function () {
   firebase.initializeApp(config);
 
   const provider = new firebase.auth.GoogleAuthProvider();
+  const auth = firebase.auth()
 
   $(document).on('click', '.log-in', function () {
-    auth(provider, loggedIn);
+    login(provider, isLoggedIn);
     $(this).removeClass('log-in')
       .addClass('log-out')
       .html('Logout');
   });
 
   $(document).on('click', '.log-out', function () {
-    firebase.auth().signOut().then(() => {}, (error) => {
+    auth.signOut().then(() => {}, (error) => {
       if (error) throw error
     });
     $(this).removeClass('log-out')
       .addClass('log-in')
       .html('Login With Google');
-    loggedOut();
+    isLoggedOut();
   });
 
-  function auth(provider, loggedIn) {
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-      firebase.auth().signInWithPopup(provider).then((result) => {
+  const login = (provider, isLoggenIn) => {
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+      auth.signInWithPopup(provider).then((result) => {
         const user = result.user;
         console.log(user)
-        loggedIn(user);
+        isLoggedIn(user);
       }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -43,14 +44,14 @@ $(document).ready(function () {
     })
   }
 
-  const loggedIn = user => {
+  const isLoggedIn = user => {
     //DO SOMETHING
     $("#user").text(`Welcome,`)
     $("#email").text(user.email)
     $(".start").append(`<img src="https://user-images.githubusercontent.com/42519030/54242956-f424a380-44fc-11e9-89e3-76ece045f9ca.jpg"></img>`)
   }
 
-  const loggedOut = () => {
+  const isLoggedOut = () => {
     //DO SOMETHING
     $("#user").html(`Goodbye`);
     $(".start, .welcome").empty()
