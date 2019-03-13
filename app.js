@@ -30,7 +30,7 @@ $(document).ready(function () {
     isLoggedOut();
   });
 
-  const login = (provider, isLoggenIn) => {
+  const login = (provider, isLoggedIn) => {
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
       auth.signInWithPopup(provider).then((result) => {
         const user = result.user;
