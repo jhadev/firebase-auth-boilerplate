@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+  //Copy config object from firebase
   const config = {
     apiKey: "AIzaSyCOfAAL_Al46MrmoItev-O5gMjj1uhbzNs",
     authDomain: "fir-auth-test-40008.firebaseapp.com",
@@ -8,7 +9,10 @@ $(document).ready(function () {
     storageBucket: "fir-auth-test-40008.appspot.com",
     messagingSenderId: "84698175282"
   };
+
   firebase.initializeApp(config);
+
+  //Choose providers to use in your firebase auth settings and whitelist domains where you allow it. localhost is whitelisted by default.
 
   const provider = new firebase.auth.GoogleAuthProvider();
   const auth = firebase.auth()
@@ -21,13 +25,14 @@ $(document).ready(function () {
   });
 
   $(document).on('click', '.log-out', function () {
-    auth.signOut().then(() => {}, (error) => {
+    auth.signOut().then(() => {
+      $(this).removeClass('log-out')
+        .addClass('log-in')
+        .html('Login With Google');
+      isLoggedOut();
+    }).catch((error) => {
       if (error) throw error
     });
-    $(this).removeClass('log-out')
-      .addClass('log-in')
-      .html('Login With Google');
-    isLoggedOut();
   });
 
   const login = (provider, isLoggedIn) => {
@@ -40,6 +45,10 @@ $(document).ready(function () {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
+        if (error) {
+          console.log(errorCode)
+          console.log(errorMessage)
+        }
       });
     })
   }
